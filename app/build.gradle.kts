@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace = "com.neronguyenvn.reorderablelauncher"
+    namespace = "com.neronguyenvn.nerolauncher"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.neronguyenvn.reorderablelauncher"
+        applicationId = "com.neronguyenvn.nerolauncher"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CustomLauncher"
+rootProject.name = "NeroLauncher"
 include(":app")
  
