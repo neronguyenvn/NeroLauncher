@@ -9,12 +9,9 @@ import com.neronguyenvn.nerolauncher.core.data.util.packageName
 import com.neronguyenvn.nerolauncher.core.database.AppDao
 import com.neronguyenvn.nerolauncher.core.database.model.AppEntity
 import com.neronguyenvn.nerolauncher.core.database.model.asExternalModel
-import com.neronguyenvn.nerolauncher.core.database.model.canUninstall
 import com.neronguyenvn.nerolauncher.core.database.model.isInstalledAndUpToDate
-import com.neronguyenvn.nerolauncher.core.designsystem.util.asBitmap
 import com.neronguyenvn.nerolauncher.core.model.App
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -32,27 +29,19 @@ class OfflineFirstAppRepository @Inject constructor(
     private val pm = context.packageManager
     private val maxAppsPerPage = MutableSharedFlow<Int>(replay = 1)
 
-    override fun getAppsStream(): Flow<List<List<App>>> {
-
-        val appInfoMap = pm.appInfoMap
-        return appDao.observeAll().map { apps ->
-
-            val pagedApps = apps.groupBy { it.page }.mapValues { entry ->
-                entry.value.mapNotNull { entity ->
-                    entity.asExternalModel(
-                        icon = appInfoMap[entity.packageName]?.loadIcon(pm)?.asBitmap(),
-                        canUninstall = entity.canUninstall(pm)
-                    )
-                }
+    override fun getAppsStream() = appDao.observeAll().map { apps ->
+        val pagedApps = apps
+            .groupBy { it.page }
+            .mapValues { (_, appsInPage) ->
+                appsInPage.mapNotNull { it.asExternalModel(pm) }
             }
 
-            val sortedPagedApps = pagedApps
-                .toSortedMap()
-                .values
-                .map { it.sortedBy { app -> app.index } }
+        val sortedPagedApps = pagedApps
+            .toSortedMap()
+            .values
+            .map { it.sortedBy { app -> app.index } }
 
-            return@map sortedPagedApps
-        }
+        return@map sortedPagedApps
     }
 
     private val refreshApplicationMutex = Mutex()

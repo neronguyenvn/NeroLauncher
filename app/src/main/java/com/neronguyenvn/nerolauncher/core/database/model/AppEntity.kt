@@ -3,9 +3,10 @@ package com.neronguyenvn.nerolauncher.core.database.model
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
-import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.neronguyenvn.nerolauncher.core.designsystem.util.asBitmap
+import com.neronguyenvn.nerolauncher.core.ktx.getAppIconOrNull
 import com.neronguyenvn.nerolauncher.core.model.App
 
 @Entity(tableName = "UserApp")
@@ -19,16 +20,17 @@ data class AppEntity(
     val packageName: String
 )
 
-fun AppEntity.asExternalModel(
-    icon: Bitmap?,
-    canUninstall: Boolean
-) = icon?.let {
-    App(
+fun AppEntity.asExternalModel(packageManager: PackageManager): App? {
+    val icon = packageManager
+        .getAppIconOrNull(packageName)
+        ?.asBitmap() ?: return null
+
+    return App(
         name = name,
         icon = icon,
         packageName = packageName,
         version = version,
-        canUninstall = canUninstall,
+        canUninstall = canUninstall(packageManager),
         index = index
     )
 }
