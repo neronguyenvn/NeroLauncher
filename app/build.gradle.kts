@@ -30,6 +30,11 @@ android {
             )
             signingConfig = signingConfigs.getByName("debug")
         }
+
+        debug {
+            applicationIdSuffix = ".debug"
+            resValue("string", "app_name", "Nero Launcher Debug")
+        }
     }
 
     compileOptions {
