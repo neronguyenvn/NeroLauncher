@@ -27,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,7 +41,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neronguyenvn.nerolauncher.core.model.App
 import com.neronguyenvn.nerolauncher.core.ui.appitem.AppItem
 import com.neronguyenvn.nerolauncher.core.ui.pageslider.PageIndicator
@@ -106,7 +106,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
         viewModel.onEvent(UpdateMaxAppsPerPage(COLUMNS * rows))
     }
 
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(containerColor = MaterialTheme.colorScheme.background) { paddings ->
         val paddingModifier = Modifier.padding(paddings)
