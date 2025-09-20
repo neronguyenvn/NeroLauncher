@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
 
@@ -84,4 +85,7 @@ dependencies {
 
     // Make grid items reorderable
     implementation(libs.reorderable)
+
+    // Serialization for JSON
+    implementation(libs.kotlinx.serialization.json)
 }
