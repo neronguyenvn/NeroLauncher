@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.neronguyenvn.nerolauncher.core.data.AppRepository
 import com.neronguyenvn.nerolauncher.core.model.App
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +15,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
 private const val ITEM_POSITION_SET_DELAY_MILLIS = 300L
 private const val TAG = "HomeViewModel"
@@ -32,10 +31,8 @@ sealed interface HomeUiState {
     ) : HomeUiState
 }
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val appRepo: AppRepository,
-) : ViewModel() {
+@KoinViewModel
+class HomeViewModel(private val appRepo: AppRepository) : ViewModel() {
 
     private val _apps = MutableStateFlow<List<List<App>>>(emptyList())
     private val apps get() = _apps.value

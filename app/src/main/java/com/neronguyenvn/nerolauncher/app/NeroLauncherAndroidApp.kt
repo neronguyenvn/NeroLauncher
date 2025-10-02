@@ -1,18 +1,30 @@
 package com.neronguyenvn.nerolauncher.app
 
 import android.app.Application
+import com.neronguyenvn.nerolauncher.core.common.coroutine.di.CoroutineModule
 import com.neronguyenvn.nerolauncher.core.data.broadcast.AppChangeBroadcastReceiver
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import com.neronguyenvn.nerolauncher.core.database.di.DatabaseModule
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
+import org.koin.ksp.generated.defaultModule
+import org.koin.ksp.generated.module
 
-@HiltAndroidApp
 class NeroLauncherAndroidApp : Application() {
 
-    @Inject
-    lateinit var appChangeBroadcastReceiver: AppChangeBroadcastReceiver
+    private val appChangeBroadcastReceiver: AppChangeBroadcastReceiver by inject()
 
     override fun onCreate() {
         super.onCreate()
+        startKoin {
+            androidContext(this@NeroLauncherAndroidApp)
+            modules(
+                CoroutineModule().module,
+                DatabaseModule().module,
+                defaultModule
+            )
+        }
+
         appChangeBroadcastReceiver.register(this)
     }
 }

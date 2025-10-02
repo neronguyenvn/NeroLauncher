@@ -39,7 +39,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neronguyenvn.nerolauncher.core.model.App
 import com.neronguyenvn.nerolauncher.core.ui.appitem.AppItem
@@ -50,6 +49,7 @@ import com.neronguyenvn.nerolauncher.feature.home.HomeEvent.OnDragMove
 import com.neronguyenvn.nerolauncher.feature.home.HomeEvent.OnInit
 import com.neronguyenvn.nerolauncher.feature.home.HomeEvent.OnSelectingToMove
 import com.neronguyenvn.nerolauncher.feature.home.HomeEvent.UpdateMaxAppsPerPage
+import org.koin.androidx.compose.koinViewModel
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.ReorderableLazyGridState
 import sh.calvin.reorderable.rememberReorderableLazyGridState
@@ -93,7 +93,7 @@ sealed interface HomeEvent {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(OnInit)

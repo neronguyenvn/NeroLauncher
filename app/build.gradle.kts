@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
 }
@@ -72,10 +71,13 @@ dependencies {
     // Coil for Image Loading
     implementation(libs.coil.compose)
 
-    // Hilt for Dependency Injection
-    implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
-    ksp(libs.hilt.compiler)
+    // Koin for Dependency Injection
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.compose.navigation)
+    implementation(libs.koin.annotations)
+    ksp(libs.koin.compiler)
 
     // Room for local database
     implementation(libs.room.runtime)
@@ -84,4 +86,8 @@ dependencies {
 
     // Make grid items reorderable
     implementation(libs.reorderable)
+}
+
+ksp {
+    arg("KOIN_CONFIG_CHECK", "true")
 }
