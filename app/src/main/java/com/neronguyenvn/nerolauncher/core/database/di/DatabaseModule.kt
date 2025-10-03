@@ -3,7 +3,6 @@ package com.neronguyenvn.nerolauncher.core.database.di
 import android.content.Context
 import androidx.room.Room
 import com.neronguyenvn.nerolauncher.core.database.room.RoomClDatabase
-import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Singleton
 
@@ -17,6 +16,6 @@ class DatabaseModule {
         "cl-database"
     ).build()
 
-    @Factory
+    @Singleton
     fun providesAppDao(database: RoomClDatabase) = database.applicationDao()
 }

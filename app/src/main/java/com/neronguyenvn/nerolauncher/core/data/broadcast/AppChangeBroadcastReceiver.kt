@@ -12,7 +12,7 @@ import org.koin.core.annotation.Factory
 
 @Factory
 class AppChangeBroadcastReceiver(
-    private val applicationRepository: AppRepository,
+    private val appRepo: Lazy<AppRepository>,
     @AppScope private val appScope: CoroutineScope
 ) {
     private val receiver = object : BroadcastReceiver() {
@@ -35,7 +35,7 @@ class AppChangeBroadcastReceiver(
 
     private fun requestApplicationListUpdate() {
         appScope.launch {
-            applicationRepository.refreshApps()
+            appRepo.value.refreshApps()
         }
     }
 }
