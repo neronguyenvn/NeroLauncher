@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotzilla)
 }
 
 android {
@@ -79,6 +80,9 @@ dependencies {
     implementation(libs.koin.annotations)
     ksp(libs.koin.compiler)
 
+    // Kotzilla for monitoring
+    implementation(libs.kotzilla.sdk.compose)
+
     // Room for local database
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
@@ -90,4 +94,8 @@ dependencies {
 
 ksp {
     arg("KOIN_CONFIG_CHECK", "true")
+}
+
+kotzilla {
+    composeInstrumentation = true
 }

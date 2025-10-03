@@ -7,8 +7,9 @@ androidxNavigation = "2.9.5"
 coil = "2.7.0"
 koinAnnotations = "2.1.1-RC1"
 koinBom = "4.1.1"
-kotlin = "2.2.20"
-ksp = "2.2.20-2.0.3"
+kotlin = "2.1.21"
+kotzilla = "1.2.2"
+ksp = "2.1.21-2.0.1"
 reorderable = "3.0.0"
 room = "2.8.1"
 
@@ -26,6 +27,7 @@ koin-androidx-compose-navigation = { group = "io.insert-koin", name = "koin-andr
 koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koinAnnotations" }
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koinBom" }
 koin-compiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koinAnnotations" }
+kotzilla-sdk-compose = { group = "io.kotzilla", name = "kotzilla-sdk-compose", version.ref = "kotzilla" }
 reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version.ref = "reorderable" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
@@ -35,4 +37,5 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotzilla = { id = "io.kotzilla.kotzilla-plugin", version.ref = "kotzilla" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
