@@ -53,6 +53,19 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    applicationVariants.all {
+        outputs.forEach { output ->
+            output as com.android.build.gradle.internal.api.ApkVariantOutputImpl
+            val apkName = buildString {
+                append("NeroLauncher").append("_")
+                append("v$versionName").append("_")
+                append(buildType.name)
+                append(".apk")
+            }
+            output.outputFileName = apkName
+        }
+    }
 }
 
 kotlin {
@@ -65,7 +78,7 @@ dependencies {
     // Baseline Profile for precompile AOT
     implementation(libs.androidx.profileinstaller)
     baselineProfile(projects.benchmarks)
-    
+
     // Jetpack Compose
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
