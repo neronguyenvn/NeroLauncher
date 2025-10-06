@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.baselineprofile)
     alias(libs.plugins.compose)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
@@ -61,6 +62,10 @@ kotlin {
 }
 
 dependencies {
+    // Baseline Profile for precompile AOT
+    implementation(libs.androidx.profileinstaller)
+    baselineProfile(projects.benchmarks)
+    
     // Jetpack Compose
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
