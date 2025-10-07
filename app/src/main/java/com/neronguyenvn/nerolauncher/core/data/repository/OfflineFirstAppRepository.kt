@@ -10,6 +10,8 @@ import com.neronguyenvn.nerolauncher.core.database.AppDao
 import com.neronguyenvn.nerolauncher.core.database.model.AppEntity
 import com.neronguyenvn.nerolauncher.core.database.model.asExternalModel
 import com.neronguyenvn.nerolauncher.core.database.model.isInstalledAndUpToDate
+import com.neronguyenvn.nerolauncher.core.ktx.Loggable
+import com.neronguyenvn.nerolauncher.core.ktx.logged
 import com.neronguyenvn.nerolauncher.core.model.App
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
@@ -24,7 +26,7 @@ private const val TAG = "OfflineFirstAppRepository"
 class OfflineFirstAppRepository(
     private val appDao: AppDao,
     context: Context,
-) : AppRepository {
+) : AppRepository, Loggable {
 
     private val pm = context.packageManager
     private val maxAppsPerPage = MutableSharedFlow<Int>(replay = 1)
@@ -45,41 +47,43 @@ class OfflineFirstAppRepository(
     }
 
     private val refreshApplicationMutex = Mutex()
-    override suspend fun refreshApps() = refreshApplicationMutex.withLock {
-        val dbApps = appDao.getAll()
-        val dbAppMap = dbApps.associateBy { it.packageName }
-        val tempMap = getAppTempMap(dbApps)
+    override suspend fun refreshApps() = logged("refreshApps") {
+        refreshApplicationMutex.withLock {
+            val dbApps = appDao.getAll()
+            val dbAppMap = dbApps.associateBy { it.packageName }
+            val tempMap = getAppTempMap(dbApps)
 
-        val appInfoList = pm.appInfoMap.values
-        appDao.deleteUninstalled(appInfoList.map { it.packageName })
+            val appInfoList = pm.appInfoMap.values
+            appDao.deleteUninstalled(appInfoList.map { it.packageName })
 
-        for (appInfo in appInfoList) {
-            val existingApp = dbAppMap[appInfo.packageName]
-            if (existingApp != null && existingApp.isInstalledAndUpToDate(dbAppMap)) {
-                Log.d(TAG, "${appInfo.packageName} is up to date")
-                continue
+            for (appInfo in appInfoList) {
+                val existingApp = dbAppMap[appInfo.packageName]
+                if (existingApp != null && existingApp.isInstalledAndUpToDate(dbAppMap)) {
+                    Log.d(TAG, "${appInfo.packageName} is up to date")
+                    continue
+                }
+
+                val page = calculatePage(tempMap, maxAppsPerPage.first())
+                val newApp = appInfo.asEntity(
+                    packageManager = pm,
+                    page = page,
+                    index = calculateIndexAndUpdateTempMap(tempMap, appInfo.packageName, page),
+                )
+
+                appDao.upsert(newApp)
             }
-
-            val page = calculatePage(tempMap, maxAppsPerPage.first())
-            val newApp = appInfo.asEntity(
-                packageManager = pm,
-                page = page,
-                index = calculateIndexAndUpdateTempMap(tempMap, appInfo.packageName, page),
-            )
-
-            appDao.upsert(newApp)
         }
     }
 
-    override suspend fun editAppName(newName: String, app: App) {
+    override suspend fun editAppName(newName: String, app: App) = logged("editAppName") {
         appDao.updateName(newName, app.packageName)
     }
 
-    override suspend fun moveInPage(toIndex: Int, app: App) {
+    override suspend fun moveInPage(toIndex: Int, app: App) = logged("moveInPage") {
         appDao.updateIndexByPackageName(toIndex, app.packageName)
     }
 
-    override suspend fun moveToPage(toPage: Int, apps: List<App>) {
+    override suspend fun moveToPage(toPage: Int, apps: List<App>) = logged("moveToPage") {
         val tempMap = getAppTempMap(appDao.getAll())
         val remainingPageSpace = maxAppsPerPage.first() - (tempMap[toPage]?.size ?: 0)
         var latestIndex = tempMap[toPage]?.lastIndex ?: -1
@@ -92,7 +96,7 @@ class OfflineFirstAppRepository(
         removeEmptyPagesAndReindex()
     }
 
-    override suspend fun updateMaxAppsPerPage(count: Int) {
+    override suspend fun updateMaxAppsPerPage(count: Int) = logged("updateMaxAppsPerPage") {
         maxAppsPerPage.emit(count)
     }
 
