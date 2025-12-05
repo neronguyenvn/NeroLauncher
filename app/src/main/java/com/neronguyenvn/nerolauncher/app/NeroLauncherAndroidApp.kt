@@ -14,6 +14,13 @@ class NeroLauncherAndroidApp : Application() {
 
     private val appChangeBroadcastReceiver: AppChangeBroadcastReceiver by inject()
 
+    /**
+     * Initializes application-wide services and registers the app-change broadcast receiver.
+     *
+     * Sets up Koin with the application context, enables analytics integration, and loads
+     * the database and default dependency modules, then registers the injected
+     * AppChangeBroadcastReceiver with this application.
+     */
     override fun onCreate() {
         super.onCreate()
         startKoin {
