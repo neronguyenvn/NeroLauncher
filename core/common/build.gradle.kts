@@ -1,25 +1,6 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ksp)
-}
-
-android {
-    namespace = "com.neronguyenvn.nerolauncher.core.common"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 26
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    buildFeatures {
-        buildConfig = false
-    }
 }
 
 kotlin {
@@ -31,12 +12,10 @@ kotlin {
 dependencies {
     // Koin for Dependency Injection
     implementation(platform(libs.koin.bom))
-    implementation(libs.koin.android)
+    implementation(libs.koin.core)
     implementation(libs.koin.annotations)
     ksp(libs.koin.compiler)
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
+    implementation(libs.kotlinx.coroutines.core)
 }
 
-ksp {
-    arg("KOIN_CONFIG_CHECK", "true")
-}

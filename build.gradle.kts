@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.android.test) apply false
     alias(libs.plugins.compose) apply false
     alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotzilla) apply false
     alias(libs.plugins.ksp) apply false
 }
