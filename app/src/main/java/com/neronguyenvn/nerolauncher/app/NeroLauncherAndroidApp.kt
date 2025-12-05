@@ -1,6 +1,7 @@
 package com.neronguyenvn.nerolauncher.app
 
 import android.app.Application
+import com.neronguyenvn.nerolauncher.core.common.coroutine.di.CoroutineModule
 import com.neronguyenvn.nerolauncher.core.data.broadcast.AppChangeBroadcastReceiver
 import com.neronguyenvn.nerolauncher.core.database.di.DatabaseModule
 import io.kotzilla.sdk.analytics.koin.analytics
@@ -20,6 +21,7 @@ class NeroLauncherAndroidApp : Application() {
             androidContext(this@NeroLauncherAndroidApp)
             analytics()
             modules(
+                CoroutineModule().module,
                 DatabaseModule().module,
                 defaultModule
             )
