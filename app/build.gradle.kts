@@ -75,6 +75,8 @@ kotlin {
 }
 
 dependencies {
+    implementation(projects.core.model)
+    implementation(projects.core.common)
     // Baseline Profile for precompile AOT
     implementation(libs.androidx.profileinstaller)
     baselineProfile(projects.benchmarks)
