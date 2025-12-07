@@ -1,6 +1,7 @@
 package com.neronguyenvn.nerolauncher.feature.home
 
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.ReportDrawnWhen
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
@@ -37,9 +38,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neronguyenvn.nerolauncher.core.model.App
 import com.neronguyenvn.nerolauncher.core.ui.appitem.AppItem
@@ -50,6 +53,7 @@ import com.neronguyenvn.nerolauncher.feature.home.HomeEvent.OnDragMove
 import com.neronguyenvn.nerolauncher.feature.home.HomeEvent.OnInit
 import com.neronguyenvn.nerolauncher.feature.home.HomeEvent.OnSelectingToMove
 import com.neronguyenvn.nerolauncher.feature.home.HomeEvent.UpdateMaxAppsPerPage
+import org.koin.androidx.compose.koinViewModel
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.ReorderableLazyGridState
 import sh.calvin.reorderable.rememberReorderableLazyGridState
@@ -93,7 +97,7 @@ sealed interface HomeEvent {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(OnInit)
@@ -108,7 +112,10 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Scaffold(containerColor = MaterialTheme.colorScheme.background) { paddings ->
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        modifier = Modifier.semantics { testTagsAsResourceId = true }
+    ) { paddings ->
         val paddingModifier = Modifier.padding(paddings)
         when (uiState) {
             is HomeUiState.Loading -> LoadingEffect(paddingModifier)
@@ -117,6 +124,8 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
 
                 val uiDataState = uiState as HomeUiState.HomeData
                 val pagerState = rememberPagerState { uiDataState.apps.size }
+
+                ReportDrawnWhen { uiDataState.apps.isNotEmpty() }
 
                 LaunchedEffect(pagerState) {
                     snapshotFlow { pagerState.currentPage }.collect { page ->
@@ -194,6 +203,7 @@ private fun AppGridUi(
         state = state,
         modifier = Modifier
             .fillMaxSize()
+            .testTag("home:AppGridUi")
             .onGloballyPositioned {
                 itemHeight = with(density) {
                     it.size.height.toDp() / rows

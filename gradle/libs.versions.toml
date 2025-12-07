@@ -1,28 +1,37 @@
 [versions]
-androidGradlePlugin = "8.5.0"
-androidxActivity = "1.9.0"
-androidxComposeBom = "2024.06.00"
-androidxHiltNavigationCompose = "1.2.0"
-androidxLifecycle = "2.7.0"
-androidxNavigation = "2.7.7"
-coil = "2.6.0"
-hilt = "2.51.1"
-kotlin = "2.0.0"
-ksp = "2.0.0-1.0.21"
+androidGradlePlugin = "8.13.0"
+androidxActivity = "1.11.0"
+androidxComposeBom = "2025.09.01"
+androidxLifecycle = "2.9.4"
+androidxMacroBenchmark = "1.4.1"
+androidxNavigation = "2.9.5"
+androidxProfileinstaller = "1.4.1"
+coil = "2.7.0"
+koinAnnotations = "2.1.1-RC1"
+koinBom = "4.1.1"
+kotlin = "2.1.21"
+kotzilla = "1.2.2"
+ksp = "2.1.21-2.0.1"
 reorderable = "3.0.0"
-room = "2.6.1"
+room = "2.8.1"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
+androidx-benchmark-macro = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "androidxMacroBenchmark" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
 androidx-compose-material-iconsExtended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
 androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation" }
+androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "androidxProfileinstaller" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+koin-android = { group = "io.insert-koin", name = "koin-android"}
+koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose" }
+koin-androidx-compose-navigation = { group = "io.insert-koin", name = "koin-androidx-compose-navigation" }
+koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koinAnnotations" }
+koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koinBom" }
+koin-compiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koinAnnotations" }
+kotzilla-sdk-compose = { group = "io.kotzilla", name = "kotzilla-sdk-compose", version.ref = "kotzilla" }
 reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version.ref = "reorderable" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
@@ -30,7 +39,9 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
+baselineprofile = { id = "androidx.baselineprofile", version.ref = "androidxMacroBenchmark" }
 compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotzilla = { id = "io.kotzilla.kotzilla-plugin", version.ref = "kotzilla" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

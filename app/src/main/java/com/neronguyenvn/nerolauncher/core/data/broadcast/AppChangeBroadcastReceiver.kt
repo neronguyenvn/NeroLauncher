@@ -4,19 +4,16 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.neronguyenvn.nerolauncher.core.common.coroutine.di.ApplicationScope
+import com.neronguyenvn.nerolauncher.core.common.coroutine.di.AppScope
 import com.neronguyenvn.nerolauncher.core.data.AppRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
+import org.koin.core.annotation.Factory
 
-@Singleton
-class AppChangeBroadcastReceiver @Inject constructor(
+@Factory
+class AppChangeBroadcastReceiver(
     private val applicationRepository: AppRepository,
-
-    @ApplicationScope
-    private val applicationScope: CoroutineScope
+    @AppScope private val appScope: CoroutineScope
 ) {
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -37,7 +34,7 @@ class AppChangeBroadcastReceiver @Inject constructor(
     )
 
     private fun requestApplicationListUpdate() {
-        applicationScope.launch {
+        appScope.launch {
             applicationRepository.refreshApps()
         }
     }

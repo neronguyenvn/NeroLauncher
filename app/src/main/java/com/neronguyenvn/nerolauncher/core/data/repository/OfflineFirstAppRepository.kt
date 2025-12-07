@@ -11,19 +11,19 @@ import com.neronguyenvn.nerolauncher.core.database.model.AppEntity
 import com.neronguyenvn.nerolauncher.core.database.model.asExternalModel
 import com.neronguyenvn.nerolauncher.core.database.model.isInstalledAndUpToDate
 import com.neronguyenvn.nerolauncher.core.model.App
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import javax.inject.Inject
+import org.koin.core.annotation.Factory
 
 private const val TAG = "OfflineFirstAppRepository"
 
-class OfflineFirstAppRepository @Inject constructor(
+@Factory
+class OfflineFirstAppRepository(
     private val appDao: AppDao,
-    @ApplicationContext private val context: Context,
+    context: Context,
 ) : AppRepository {
 
     private val pm = context.packageManager
@@ -106,9 +106,7 @@ class OfflineFirstAppRepository @Inject constructor(
             .toSortedMap()
             .toMutableMap()
 
-        return if (newMap.isEmpty()) {
-            mutableMapOf(0 to mutableListOf())
-        } else newMap
+        return newMap.ifEmpty { mutableMapOf(0 to mutableListOf()) }
     }
 
     private fun calculatePage(

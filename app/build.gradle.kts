@@ -2,22 +2,23 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.baselineprofile)
     alias(libs.plugins.compose)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotzilla)
 }
 
 android {
     namespace = "com.neronguyenvn.nerolauncher"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.neronguyenvn.nerolauncher"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 2
-        versionName = "0.1.1"
+        targetSdk = 36
+        versionCode = 3
+        versionName = "0.1.2"
     }
 
     buildTypes {
@@ -52,6 +53,19 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    applicationVariants.all {
+        outputs.forEach { output ->
+            output as com.android.build.gradle.internal.api.ApkVariantOutputImpl
+            val apkName = buildString {
+                append("NeroLauncher").append("_")
+                append("v$versionName").append("_")
+                append(buildType.name)
+                append(".apk")
+            }
+            output.outputFileName = apkName
+        }
+    }
 }
 
 kotlin {
@@ -61,6 +75,10 @@ kotlin {
 }
 
 dependencies {
+    // Baseline Profile for precompile AOT
+    implementation(libs.androidx.profileinstaller)
+    baselineProfile(projects.benchmarks)
+
     // Jetpack Compose
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -72,10 +90,16 @@ dependencies {
     // Coil for Image Loading
     implementation(libs.coil.compose)
 
-    // Hilt for Dependency Injection
-    implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
-    ksp(libs.hilt.compiler)
+    // Koin for Dependency Injection
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.compose.navigation)
+    implementation(libs.koin.annotations)
+    ksp(libs.koin.compiler)
+
+    // Kotzilla for monitoring
+    implementation(libs.kotzilla.sdk.compose)
 
     // Room for local database
     implementation(libs.room.runtime)
@@ -84,4 +108,12 @@ dependencies {
 
     // Make grid items reorderable
     implementation(libs.reorderable)
+}
+
+ksp {
+    arg("KOIN_CONFIG_CHECK", "true")
+}
+
+kotzilla {
+    composeInstrumentation = true
 }
